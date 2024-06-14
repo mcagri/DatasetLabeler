@@ -6,3 +6,6 @@ Project consists of 3 parts.
 <li>Automatic Labelling with ASR (Whisper Model)</li>
 <li>Manual Labelling for improved dataset quality</li>
 </ul>
+
+WebRTC-VAD implementation is taken from this repository.
+https://github.com/wiseman/py-webrtcvad/blob/master/example.py
