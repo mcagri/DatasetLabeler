@@ -26,17 +26,38 @@ db = client[dbname]
 collection = db['Audio']
 
 @task
-def process_stereo2mono(path: str = "./Data", mono_path: str = "./Data/16khz", sample_rate: int = 16000):
+def process_stereo2mono(path: str = "../Data", mono_path: str = "../Data/mono",
+                        resample_path: str = "../Data/16khz", sample_rate: int = 16000):
     sound_files = {}
     for filename in os.listdir(path):
         try:
-            data, samplerate = sf.read(path + "/" + filename)
+            data, sr = sf.read(path + "/" + filename)
             # Separate channels
             left_channel = data[:, 0]  # Left channel
             right_channel = data[:, 1]  # Right channel
-            left_channel, sr = librosa.load(left_channel, sr=sample_rate)
-            right_channel, sr = librosa.load(right_channel, sr=sample_rate)
-            sf.write(mono_path + "/" + "left_channel_" + filename, left_channel, sample_rate)
-            sf.write(mono_path + "/" + "right_channel_" + filename, right_channel, sample_rate)
+            sf.write(mono_path + "/" + "left_channel_" + filename, left_channel, sr)
+            sf.write(mono_path + "/" + "right_channel_" + filename, right_channel, sr)
         except Exception as e:
             print(e)
+
+    for filename in os.listdir(mono_path):
+        try:
+            y, sr = librosa.load(mono_path + "/" + filename, sr=sample_rate)
+            sf.write(resample_path + "/" + filename, y, samplerate=sample_rate)
+        except Exception as e:
+            print(e)
+
+
+@flow(log_prints=True)
+def audio_ingestion_file_ops():
+    path = "../Data"
+    mono_path = "../Data/mono"
+    resample_path = "../Data/16khz"
+    sample_rate = 16000
+    process_stereo2mono(path, mono_path, resample_path, sample_rate)
+
+
+if __name__ == "__main__":
+    audio_ingestion_file_ops.serve(name="audio_ingestion_file_ops",
+    tags = ["medium", "DataLabeler"],
+    description = "Create a DataSet for ASR",)
