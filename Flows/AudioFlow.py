@@ -3,10 +3,6 @@ import torch
 
 from prefect import flow, task, serve
 from pymongo import MongoClient
-import configparser
-import pandas as pd
-import requests
-import json
 
 import AudioUtils.VAD as Vad
 import soundfile as sf
@@ -33,6 +29,7 @@ pipe = pipeline(
     model_kwargs= {"attn_implementation": "flash_attention_2"}
 )
 
+
 @task
 def process_stereo2mono(path: str = "../Data/", mono_path: str = "../Data/mono/",
                         resample_path: str = "../Data/16khz/", sample_rate: int = 16000):
@@ -54,6 +51,7 @@ def process_stereo2mono(path: str = "../Data/", mono_path: str = "../Data/mono/"
             sf.write(resample_path + filename, y, samplerate=sample_rate)
         except Exception as e:
             print(e)
+
 
 @task
 def process_vad_chunking(input_path: str = "../Data/16khz/", output_path: str = "../Data/chunks/", aggressiveness: int = 2):
