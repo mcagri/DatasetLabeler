@@ -3,8 +3,6 @@ import contextlib
 import sys
 import wave
 
-import webrtcvad
-
 
 def read_wave(path):
     """Reads a .wav file.
