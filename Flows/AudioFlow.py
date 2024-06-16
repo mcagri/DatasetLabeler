@@ -82,7 +82,7 @@ def transcribe(input_path: str = "../Data/chunks/", sample_rate: int = 16000, bu
         temp_path = os.path.join(input_path, filename)
         transcript = pipe(temp_path, generate_kwargs={"language": "tr"})["text"]
         data, sr = librosa.load(temp_path, sr=sample_rate, mono=True)
-        temp_object = {'sentence':transcript,
+        temp_object = {'asr_sentence':transcript,
                        'audio':{'path':temp_path,
                                 'sampling_rate':sample_rate,
                                 'array':data.tolist()}
