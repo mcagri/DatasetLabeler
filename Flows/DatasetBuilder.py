@@ -47,7 +47,7 @@ async def fetch_data():
             "audio": {
                 "path": document["audio"]["path"],
                 "sampling_rate": document["audio"]["sampling_rate"],
-                "array": document["audio"]["array"]
+                "array": np.asarray(document["audio"]["array"], dtype="float32")
             }
         })
     return recordings
